@@ -1,0 +1,16 @@
+//@version=4
+study(shorttitle="MACD 4C w.SM", title="MACD with settingsMultiplier", precision=5)
+factor = input(title="Settings Mutiplier", type=input.float, defval=1.0, minval=0.5, step=0.5)
+fastMA = round(12 * factor)
+slowMA = round(26 * factor)
+lastColor = color.yellow
+[currMacd, _, _] = macd(close[0], fastMA, slowMA, 9)
+[prevMacd, _, _] = macd(close[1], fastMA, slowMA, 9)
+plotColor = currMacd > 0 ? currMacd > prevMacd ? #73EF2B : #469916 :
+   currMacd < prevMacd ? #FF0000 : #FF4343
+plot(currMacd, style=plot.style_histogram, color=plotColor, linewidth=3)
+plot(0, title="Zero line", linewidth=1, color=color.gray)
+upCross = currMacd > 0 and prevMacd < 0
+downCross = currMacd < 0 and prevMacd > 0
+plotshape(upCross, style=shape.labelup, color=#73EF2B, location=location.bottom)
+plotshape(downCross, style=shape.labeldown, color=#D11515, location=location.top)
